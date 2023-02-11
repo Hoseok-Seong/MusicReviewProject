@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import shop.mtcoding.blog.dto.user.UserReqDto.JoinReqDto;
+import shop.mtcoding.blog.dto.user.UserReqDto.LoginReqDto;
 import shop.mtcoding.blog.handler.exception.CustomException;
 import shop.mtcoding.blog.model.User;
 import shop.mtcoding.blog.model.UserRepository;
@@ -29,5 +30,18 @@ public class UserService {
         if (result != 1) {
             throw new CustomException("회원가입이 실패하였습니다");
         }
+    }
+
+    @Transactional(readOnly = true)
+    public User 로그인하기(LoginReqDto loginReqDto) {
+        // 1. db에 select하기
+        User principal = userRepository.findByUsernameAndPassword(loginReqDto.getUsername(), loginReqDto.getPassword());
+
+        // 2. principal 유효성 검사
+        if (principal == null) {
+            throw new CustomException("존재하지 않는 아이디거나 비밀번호를 다시 확인해주시기 바랍니다");
+        }
+
+        return principal;
     }
 }
