@@ -43,6 +43,12 @@ public class BoardController {
         return "/board/detail";
     }
 
+    @GetMapping("/board/{id}")
+    public String detail(@PathVariable int id, Model model) {
+        model.addAttribute("boardDto", boardRepository.findByIdWithUser(id));
+        return "/board/detail";
+    }
+
     @GetMapping("/board/saveForm")
     public String saveForm() {
         return "/board/saveForm";
@@ -71,12 +77,6 @@ public class BoardController {
         boardService.글쓰기(boardSaveReqDto, principal.getId());
 
         return new ResponseEntity<>(new ResponseDto<>(1, "글쓰기 성공", null), HttpStatus.CREATED);
-    }
-
-    @GetMapping("/board/{id}")
-    public String detail(@PathVariable int id, Model model) {
-        model.addAttribute("boardDto", boardRepository.findByIdWithUser(id));
-        return "/board/detail";
     }
 
     @GetMapping("/board/updateForm")
