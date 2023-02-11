@@ -4,9 +4,23 @@
             <c:if test="${boardDto.userId == principal.id}">
                 <div class="mb-3">
                     <a href="/board/updateForm" class="btn btn-warning">수정</a>
-                    <button class="btn btn-danger">삭제</button>
+                    <button onClick="deleteById(${boardDto.id})" class="btn btn-danger">삭제</button>
                 </div>
             </c:if>
+            <script>
+                function deleteById(id) {
+                    $.ajax({
+                        type: "delete",
+                        url: "/board/" + id,
+                        dataType: "json" //json으로 받을 것이다
+                    }).done((res) => { //20x일 때
+                        alert(res.msg);
+                        location.href = "/";
+                    }).fail((err) => { // 40x, 50x 일 때
+                        alert(err.responseJSON.msg);
+                    });
+                }
+            </script>
 
             <div class="mb-2 text-white">
                 글 번호 : <span id="id"><i>${boardDto.id} </i></span> 작성자 : <span><i>${boardDto.username} </i></span>
