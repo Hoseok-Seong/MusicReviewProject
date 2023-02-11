@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -39,6 +40,12 @@ public class BoardController {
 
     @GetMapping("/board/detail")
     public String detail() {
+        return "/board/detail";
+    }
+
+    @GetMapping("/board/{id}")
+    public String detail(@PathVariable int id, Model model) {
+        model.addAttribute("boardDto", boardRepository.findByIdWithUser(id));
         return "/board/detail";
     }
 
