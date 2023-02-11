@@ -22,5 +22,9 @@
 
     <update id="updateById" >
         update user_tb set username= #{username}, password= #{password}, email= #{email} where id = #{id} 
-    </update>     
+    </update>
+
+    <select id="findByName" resultType="shop.mtcoding.blog.model.User">
+      select * from user_tb where username = #{username}
+    </select>     
 </mapper>
