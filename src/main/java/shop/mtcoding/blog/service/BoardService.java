@@ -12,6 +12,7 @@ import shop.mtcoding.blog.dto.board.BoardRespDto.BoardUpdateRespDto;
 import shop.mtcoding.blog.handler.exception.CustomApiException;
 import shop.mtcoding.blog.model.Board;
 import shop.mtcoding.blog.model.BoardRepository;
+import shop.mtcoding.blog.util.ThumbnailParser;
 
 @Transactional(readOnly = true)
 @Service
@@ -24,7 +25,7 @@ public class BoardService {
     @Transactional
     public void 글쓰기(BoardSaveReqDto boardSaveReqDto, int userId) {
 
-        String img = "/images/default.jpg";
+        String img = ThumbnailParser.thumbnailParser(boardSaveReqDto.getContent());
 
         int result = boardRepository.insert(userId, boardSaveReqDto.getTitle(), boardSaveReqDto.getContent(), img);
         if (result != 1) {
@@ -63,7 +64,7 @@ public class BoardService {
             throw new CustomApiException("해당 게시글을 수정할 권한이 없습니다", HttpStatus.FORBIDDEN);
         }
 
-        String img = "/images/default.jpg";
+        String img = ThumbnailParser.thumbnailParser(boardUpdateReqDto.getContent());
 
         int result = boardRepository.updateById(id, boardUpdateReqDto.getTitle(),
                 boardUpdateReqDto.getContent(), img);
