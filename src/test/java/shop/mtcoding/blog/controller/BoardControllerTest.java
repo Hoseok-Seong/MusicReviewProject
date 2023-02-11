@@ -1,11 +1,12 @@
 package shop.mtcoding.blog.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -27,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import shop.mtcoding.blog.dto.board.BoardReqDto.BoardSaveReqDto;
+import shop.mtcoding.blog.dto.board.BoardReqDto.BoardUpdateReqDto;
 import shop.mtcoding.blog.dto.board.BoardRespDto;
 import shop.mtcoding.blog.dto.board.BoardRespDto.BoardDetailRespDto;
 import shop.mtcoding.blog.model.User;
@@ -132,6 +134,33 @@ public class BoardControllerTest {
          * 객체탐색: 닷(.)
          * 배열: [0]
          */
+        // then
+        resultActions.andExpect(jsonPath("$.code").value(1)); // json 데이터를 받음
+        resultActions.andExpect(status().isOk());
+    }
+
+    @Test
+    public void update_test() throws Exception {
+        // given
+        int id = 1;
+        BoardUpdateReqDto boardUpdateReqDto = new BoardUpdateReqDto();
+        boardUpdateReqDto.setTitle("제목1-수정");
+        boardUpdateReqDto.setContent("내용1-수정");
+
+        String requestBody = om.writeValueAsString(boardUpdateReqDto);
+        System.out.println("테스트 : " + requestBody);
+
+        // when
+        ResultActions resultActions = mvc.perform(put("/board/" + id).content(requestBody)
+                .contentType(MediaType.APPLICATION_JSON_VALUE).session(mockSession));
+
+        // /*
+        // * jsonPath
+        // * 최상위 : $
+        // * 객체탐색: 닷(.)
+        // * 배열: [0]
+        // */
+
         // then
         resultActions.andExpect(jsonPath("$.code").value(1)); // json 데이터를 받음
         resultActions.andExpect(status().isOk());
